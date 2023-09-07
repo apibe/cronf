@@ -1,0 +1,36 @@
+{
+  "FTP": {
+    "ADDR": "ip:21",
+    "USERNAME": "****",
+    "PASSWORD": "***"
+  },
+  "CRON_DOWNLOAD": [
+    {
+      "NAME": "早八时FTP定时拉取任务",
+      "EXEC": true,
+      "JOIN_CRON": true,
+      "CRON": "0 05 8 * * ?",
+      "FTP_PATH": "/realtime/{date:20060102}08",
+      "LOCAL_PATH": "F:/BSB/tqdatas/{date:20060102}08",
+      "RETRY": {
+        "INTERVAL": 5,
+        "TIMES": 10
+      }
+    },
+    {
+      "NAME": "晚八时FTP定时拉取任务",
+      "EXEC": false,
+      "JOIN_CRON": false,
+      "CRON": "0 05 20 * * ?",
+      "FTP_PATH": "/realtime/{date:20060102}20",
+      "LOCAL_PATH": "F:/BSB/tqdatas/{date:20060102}20",
+      "RETRY": {
+        "INTERVAL": 5,
+        "TIMES": 10
+      }
+    }
+  ],
+  "LOG": {
+    "OUTPUT": false
+  }
+}
