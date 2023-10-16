@@ -1,6 +1,7 @@
-package internal
+package core
 
 import (
+	"github.com/apibe/cronf/global"
 	"log"
 	"os"
 )
@@ -25,7 +26,7 @@ func logInit() {
 			return
 		}
 	}
-	if !C.LOG.OUTPUT {
+	if !global.C.Log.Output {
 		log.SetOutput(F)
 	}
 }

@@ -1,4 +1,4 @@
-package internal
+package utils
 
 import (
 	"regexp"
@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func path(path string) string {
+func Path(path string) string {
 	compiled := regexp.MustCompile(`\{(\w+:\w+)\}`)
 	compiledChild := regexp.MustCompile(`(\w+):(\w+)`)
 	matches := compiled.FindAllStringSubmatch(path, -1)

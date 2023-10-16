@@ -1,8 +1,10 @@
 package internal
 
+import "C"
 import (
 	"errors"
 	"fmt"
+	"github.com/apibe/cronf/utils"
 	"github.com/jlaffaye/ftp"
 	"github.com/robfig/cron"
 	"io/ioutil"
@@ -14,28 +16,28 @@ import (
 
 func download() {
 	c := cron.New()
-	for _, cr := range C.CRONDOWNLOAD {
-		t := task{
-			addr:      C.FTP.ADDR,
-			username:  C.FTP.USERNAME,
-			password:  C.FTP.PASSWORD,
-			ftpPath:   cr.FTPPATH,
-			localPath: cr.LOCALPATH,
-			times:     cr.RETRY.TIMES,
-			interval:  cr.RETRY.INTERVAL,
-		}
-		if cr.EXEC {
-			t.downloadWithRetry()
-		}
-		if cr.JOINCRON {
-			err := c.AddFunc(cr.CRON, t.downloadWithRetry)
-			if err != nil {
-				log.Printf("%s 加入定时失败，cron表达式 %s \n", cr.NAME, cr.CRON)
-				panic(err)
-			}
-			log.Printf("%s 加入定时任务成功，cron表达式 %s \n", cr.NAME, cr.CRON)
-		}
-	}
+	//for _, cr := range global.C {
+	//	t := task{
+	//		addr:      C.FTP.ADDR,
+	//		username:  C.FTP.USERNAME,
+	//		password:  C.FTP.PASSWORD,
+	//		ftpPath:   cr.FTPPATH,
+	//		localPath: cr.LOCALPATH,
+	//		times:     cr.RETRY.TIMES,
+	//		interval:  cr.RETRY.INTERVAL,
+	//	}
+	//	if cr.EXEC {
+	//		t.downloadWithRetry()
+	//	}
+	//	if cr.JOINCRON {
+	//		err := c.AddFunc(cr.CRON, t.downloadWithRetry)
+	//		if err != nil {
+	//			log.Printf("%s 加入定时失败，cron表达式 %s \n", cr.NAME, cr.CRON)
+	//			panic(err)
+	//		}
+	//		log.Printf("%s 加入定时任务成功，cron表达式 %s \n", cr.NAME, cr.CRON)
+	//	}
+	//}
 	c.Start()
 }
 
@@ -73,9 +75,9 @@ func (t task) downloadWithRetry() {
 }
 
 func (t task) download() error {
-	t.ftpPath = path(t.ftpPath)
-	t.localPath = path(t.localPath)
-	defer Recover()
+	t.ftpPath = utils.Path(t.ftpPath)
+	t.localPath = utils.Path(t.localPath)
+	defer utils.Recover()
 	client, err := ftp.Dial(t.addr, ftp.DialWithDialer(net.Dialer{Timeout: 30 * time.Second}))
 	defer client.Quit()
 	if err != nil {
